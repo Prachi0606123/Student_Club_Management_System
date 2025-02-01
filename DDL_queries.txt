@@ -1,0 +1,130 @@
+
+CREATE TABLE major (
+  major_id VARCHAR(20) PRIMARY KEY,
+  major_name VARCHAR(100) NOT NULL,
+  department VARCHAR(100) NOT NULL,
+  college VARCHAR(100) NOT NULL
+);
+
+-- Indexes
+CREATE INDEX idx_major_name ON major (major_name);
+CREATE INDEX idx_department ON major (department);
+CREATE INDEX idx_college ON major (college);
+
+CREATE TABLE member (
+  member_id VARCHAR(20) PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  position VARCHAR(100),
+  t_shirt_size VARCHAR(10),
+  phone VARCHAR(20),
+  zip VARCHAR(10),
+  link_to_major VARCHAR(20),
+  FOREIGN KEY (link_to_major) REFERENCES major(major_id)
+);
+
+--few Membes were not present.
+
+insert into member(member_id,first_name,last_name,email,position,t_shirt_size,phone,zip,link_to_major) values('reccW7q1KkhSKZsea','NoAngela','Sanders','NOangela.sanders@lpu.edu','Member','Medium','651-928-4507','55108','recxK3MHQFbR9J5uO')
+
+insert into member(member_id,first_name,last_name,email,position,t_shirt_size,phone,zip,link_to_major) values('recQaxyXBQG5BBtD0','A','NoSanders','NOangela.sanders@lpu.edu','Member','Medium','651-928-4507','55108','recxK3MHQFbR9J5uO')
+
+-- Indexes
+CREATE INDEX idx_first_name ON member (first_name);
+CREATE INDEX idx_last_name ON member (last_name);
+CREATE INDEX idx_email ON member (email);
+CREATE INDEX idx_position ON member (position);
+CREATE INDEX idx_link_to_major ON member (link_to_major);
+
+
+
+CREATE TABLE zip_code (
+  zip_code CHAR(5) PRIMARY KEY,
+  type VARCHAR(20),
+  city VARCHAR(255),
+  county VARCHAR(255),
+  state VARCHAR(255),
+  short_state CHAR(2)
+);
+
+CREATE TABLE income (
+  income_id VARCHAR(20) PRIMARY KEY,
+  date_received DATE,
+  amount DECIMAL(10, 2),
+  source VARCHAR(255),
+  notes TEXT,
+  link_to_member VARCHAR(20),
+  FOREIGN KEY (link_to_member) REFERENCES member(member_id)
+);
+
+-- Indexes
+CREATE INDEX idx_income_date_received ON income (date_received);
+CREATE INDEX idx_income_amount ON income (amount);
+CREATE INDEX idx_income_source ON income (source);
+
+
+
+CREATE TABLE event (
+  event_id VARCHAR(20) PRIMARY KEY,
+  event_name VARCHAR(255),
+  event_date DATE,
+  type VARCHAR(50),
+  notes TEXT,
+  location VARCHAR(255),
+  status VARCHAR(20)
+);
+-- Indexes
+CREATE INDEX idx_event_event_date ON event (event_date);
+CREATE INDEX idx_event_type ON event (type);
+CREATE INDEX idx_event_status ON event (status);
+
+
+CREATE TABLE budget (
+  budget_id VARCHAR(20) PRIMARY KEY,
+  category VARCHAR(50),
+  spent DECIMAL(10, 2),
+  remaining DECIMAL(10, 2),
+  amount DECIMAL(10, 2),
+  event_status VARCHAR(20),
+  link_to_event VARCHAR(20),
+  FOREIGN KEY (link_to_event) REFERENCES event(event_id)
+);
+
+-- Indexes
+CREATE INDEX idx_budget_category ON budget (category);
+CREATE INDEX idx_budget_event_status ON budget (event_status);
+
+
+CREATE TABLE expense (
+  expense_id VARCHAR(20)  PRIMARY KEY,
+  expense_description TEXT,
+  expense_date DATE,
+  cost DECIMAL(10, 2),
+  approved BOOLEAN,
+  link_to_member VARCHAR(20),
+  link_to_budget VARCHAR(20),
+  FOREIGN KEY (link_to_member) REFERENCES member(member_id),
+  FOREIGN KEY (link_to_budget) REFERENCES budget(budget_id)
+);
+
+-- Indexes
+CREATE INDEX idx_expense_expense_date ON expense (expense_date);
+CREATE INDEX idx_expense_cost ON expense (cost);
+CREATE INDEX idx_expense_approved ON expense (approved);
+
+
+
+CREATE TABLE attendance (
+  attendance_id SERIAL PRIMARY KEY,
+  link_to_event VARCHAR(20),
+  link_to_member VARCHAR(20),
+  FOREIGN KEY (link_to_event) REFERENCES event(event_id),
+  FOREIGN KEY (link_to_member) REFERENCES member(member_id)
+);
+
+-- Indexes
+CREATE INDEX idx_attendance_event ON attendance (link_to_event);
+CREATE INDEX idx_attendance_member ON attendance (link_to_member);
+
+

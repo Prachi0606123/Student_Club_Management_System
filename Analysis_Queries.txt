@@ -1,0 +1,49 @@
+1. What are the names and email addresses of all members who hold a leadership position in the club?
+
+SELECT first_name, last_name, email
+FROM Member
+WHERE position IN ('President', 'Vice President', 'Treasurer', 'Secretary', 'Event Coordinator')
+
+
+2.
+How much money has the club spent on events in each budget category?
+
+SELECT category, SUM(spent) AS total_spent
+FROM Budget
+GROUP BY category;
+
+3.
+Which events had the highest expenses, and what were they for?
+
+SELECT E.event_name, B.category, E.location, SUM(EX.cost) AS total_expenses
+FROM Expense AS EX
+INNER JOIN Budget AS B ON EX.link_to_budget = B.budget_id
+INNER JOIN Event AS E ON B.link_to_event = E.event_id
+GROUP BY E.event_name, B.category, E.location
+ORDER BY total_expenses DESC;
+
+4.
+How much income has the club received from different sources?
+
+SELECT source, SUM(amount) AS total_income
+FROM Income
+GROUP BY source;
+
+5.
+What is the distribution of club members' majors and which departments and colleges do they belong to?
+
+SELECT M.link_to_major, COUNT(*) AS total_members, MA.major_name, MA.department, MA.college
+FROM Member AS M
+INNER JOIN Major AS MA ON M.link_to_major = MA.major_id
+GROUP BY M.link_to_major, MA.major_name, MA.department, MA.college
+ORDER BY total_members DESC;
+
+6.
+What is the geographic distribution of club members based on their ZIP codes?
+
+SELECT Z.state, COUNT(*) AS total_members
+FROM Zip_Code AS Z
+INNER JOIN Member AS M ON Z.zip_code = M.zip
+GROUP BY Z.state
+ORDER BY total_members DESC;
+
